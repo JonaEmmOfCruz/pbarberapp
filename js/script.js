@@ -98,7 +98,7 @@ navLinks.forEach(link => {
     });
 });
 
-// ===== ÚNICO FORMULARIO DE REGISTRO - VERSIÓN FORMSUBMIT =====
+// ===== FORMULARIO CON GOOGLE APPS SCRIPT =====
 const barberForm = document.getElementById('barberForm');
 if (barberForm) {
     barberForm.addEventListener('submit', async function (e) {
@@ -109,34 +109,39 @@ if (barberForm) {
         submitBtn.textContent = 'Enviando...';
         submitBtn.disabled = true;
 
-        // Crear FormData con los datos del formulario
+        // Crear objeto con los datos
         const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
 
-        // Asegurar los campos para FormSubmit
-        formData.set('_subject', 'Nuevo registro de barbero en BarberApp');
-        formData.set('_captcha', 'false');
-        formData.set('_template', 'table');
-        formData.set('_autoresponse', '¡Gracias por registrarte en BarberApp! Pronto nos pondremos en contacto contigo.');
+        // Agregar campo de términos
+        data.terminos = 'aceptado';
 
         try {
-            console.log('Enviando formulario a FormSubmit...');
-
-            const response = await fetch('https://formsubmit.co/ajax/barberapp.contact@gmail.com', {
+            // IMPORTANTE: Reemplaza con TU URL de Google Apps Script
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbyDj0T2g5lpHP2oD4oecwzhYUhEEtgmU4GLW9-K1kOauzrxLNSvK2plY6O6wancv6Ol/exec';
+            
+            console.log('Enviando datos:', data);
+            
+            const response = await fetch(scriptUrl, {
                 method: 'POST',
-                body: formData
+                mode: 'no-cors', // Importante para Apps Script
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(data).toString()
             });
 
-            const result = await response.json();
-            console.log('Respuesta de FormSubmit:', result);
+            // Con 'no-cors' no podemos leer la respuesta, asumimos éxito
+            showMessage('¡Registro exitoso! Revisa tu correo para continuar con el proceso.', 'success');
+            
+            // Limpiar formulario
+            this.reset();
 
-            if (response.ok && result.success === 'true') {
-                showMessage('¡Registro exitoso! Pronto nos pondremos en contacto contigo.', 'success');
-                this.reset(); // Limpiar el formulario
-            } else {
-                throw new Error('Error en la respuesta del servidor');
-            }
         } catch (error) {
-            console.error('Error detallado:', error);
+            console.error('Error:', error);
             showMessage('Error al enviar el formulario. Por favor, intenta de nuevo.', 'error');
         } finally {
             submitBtn.textContent = originalText;
@@ -213,7 +218,7 @@ window.addEventListener('scroll', () => {
 // Inicializar funciones cuando carga la página
 window.addEventListener('load', () => {
     highlightActiveLink();
-    
+
     // Fade-in para el hero
     const heroContent = document.querySelector('.hero-content');
     const heroImage = document.querySelector('.hero-image');
