@@ -147,116 +147,107 @@ if (candidatoForm) {
 
             validateFiles(formData);
 
+            // PRIMERO: Extraer los datos del formulario (texto, no archivos)
+            const datos = {};
+            formData.forEach((value, key) => {
+                if (!(value instanceof File)) {
+                    datos[key] = value;
+                }
+            });
 
             // Convertir archivos a base64
             function fileToBase64(file) {
-
                 return new Promise((resolve, reject) => {
-
                     const reader = new FileReader();
-
                     reader.onload = () => {
-
                         const base64 = reader.result.split(',')[1];
-
                         resolve({
                             nombre: file.name,
                             tipo: file.type,
                             data: base64
                         });
-
                     };
-
                     reader.onerror = reject;
-
                     reader.readAsDataURL(file);
-
                 });
-
             }
-
 
             let archivos = [];
 
-
             for (let pair of formData.entries()) {
-
                 if (pair[1] instanceof File && pair[1].size > 0) {
-
                     const archivo = await fileToBase64(pair[1]);
+
+                    // AHORA SÍ podemos usar datos porque ya está declarado
+                    let nombreArchivo = archivo.nombre;
+                    const nombreLimpio = datos.nombre_completo ? datos.nombre_completo.replace(/\s+/g, '_') : 'sin_nombre';
+                    const extension = archivo.nombre.split('.').pop();
+
+                    switch (pair[0]) {
+                        case 'identificacion':
+                            nombreArchivo = `INE_${nombreLimpio}.${extension}`;
+                            break;
+                        case 'curp':
+                            nombreArchivo = `CURP_${nombreLimpio}.${extension}`;
+                            break;
+                        case 'comprobante_domicilio':
+                            nombreArchivo = `Comprobante_Domicilio_${nombreLimpio}.${extension}`;
+                            break;
+                        case 'certificados':
+                            nombreArchivo = `Certificado_${nombreLimpio}_${Date.now()}.${extension}`;
+                            break;
+                        case 'foto_perfil':
+                            nombreArchivo = `Foto_Perfil_${nombreLimpio}.${extension}`;
+                            break;
+                        case 'portafolio':
+                            nombreArchivo = `Portafolio_${nombreLimpio}_${Date.now()}.${extension}`;
+                            break;
+                        default:
+                            nombreArchivo = archivo.nombre;
+                    }
 
                     archivos.push({
                         campo: pair[0],
-                        nombre: archivo.nombre,
+                        nombre: nombreArchivo,
                         tipo: archivo.tipo,
                         data: archivo.data
                     });
-
                 }
-
             }
-
 
             // Procesar días
             const diasSelect = this.querySelector('select[name="dias_disponibles"]');
-
             if (diasSelect) {
-                formData.set(
-                    'dias_disponibles',
-                    processSelectedDays(diasSelect)
-                );
+                datos.dias_disponibles = processSelectedDays(diasSelect);
             }
-
-
-            // DATOS
-            const datos = {};
-
-            formData.forEach((value, key) => {
-
-                if (!(value instanceof File)) {
-                    datos[key] = value;
-                }
-
-            });
-
 
             // PAYLOAD
             const payload = {
-
                 datos: datos,
                 archivos: archivos
-
             };
-
 
             console.log("Payload enviado:", payload);
 
-
             // ENVIAR
             const response = await fetch(
-                'https://script.google.com/macros/s/AKfycbxV7bm0gzaO6hm1Y9od8PQ771cZ46lu13HFpaThGShaJC2sdyRvFCPEDpM7Wl-Caw9b/exec',
+                'https://script.google.com/macros/s/AKfycbzAF-Lx81A76t2oiKAoNxMCbxbzZdBfxeaWvrKMkBd9ggpFuguodmXukxCmuTLJupyvPw/exec',
                 {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
 
-
             console.log("Status:", response.status);
-
             const result = await response.json();
-
             console.log("Respuesta servidor:", result);
 
-
             if (result.success) {
-
                 showMessage(
                     "¡Postulación enviada con éxito! Te contactaremos pronto.",
                     "success"
                 );
 
                 this.reset();
-
 
                 document.querySelectorAll('.file-upload span').forEach(span => {
                     span.textContent = 'Seleccionar archivo';
@@ -268,163 +259,93 @@ if (candidatoForm) {
                 });
 
             } else {
-
                 throw new Error(result.error || "Error del servidor");
-
             }
 
-
         } catch (error) {
-
             console.error("Error:", error);
-
             showMessage(
                 `Error: ${error.message}`,
                 "error"
             );
-
         } finally {
-
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
-
         }
 
     });
 
 }
 
-
-
+// El resto del código (validaciones, etc.) permanece igual...
 // Validar teléfono
 const telefonoInput = document.querySelector('input[name="telefono"]');
-
 if (telefonoInput) {
-
     telefonoInput.addEventListener('input', function () {
-
-        this.value = this.value
-            .replace(/[^0-9]/g, '')
-            .slice(0, 10);
-
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
     });
-
 }
-
-
 
 // Validar código postal
 const cpInput = document.querySelector('input[name="codigo_postal"]');
-
 if (cpInput) {
-
     cpInput.addEventListener('input', function () {
-
-        this.value = this.value
-            .replace(/[^0-9]/g, '')
-            .slice(0, 5);
-
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);
     });
-
 }
-
-
 
 // Mostrar nombre archivo
 document.querySelectorAll('input[type="file"]').forEach(input => {
-
     input.addEventListener('change', function () {
-
         const uploadDiv = this.closest('.file-upload');
         const span = uploadDiv.querySelector('span');
 
         if (this.files.length > 0) {
-
             if (this.multiple) {
-
-                const nombres = Array.from(this.files)
-                    .map(f => f.name)
-                    .join(', ');
-
-                span.textContent =
-                    `${this.files.length} archivo(s): ${nombres.substring(0, 40)}...`;
-
+                const nombres = Array.from(this.files).map(f => f.name).join(', ');
+                span.textContent = `${this.files.length} archivo(s): ${nombres.substring(0, 40)}...`;
             } else {
-
                 span.textContent = this.files[0].name;
-
             }
-
             uploadDiv.style.borderColor = '#c0392b';
             uploadDiv.style.background = '#fff5f5';
-
         } else {
-
             span.textContent = 'Seleccionar archivo';
-
             uploadDiv.style.borderColor = '#ddd';
             uploadDiv.style.background = '#f8f8f8';
-
         }
-
     });
-
 });
 
-
-
 // Animación scroll
-const observerOptions = {
-    threshold: 0.1
-};
-
+const observerOptions = { threshold: 0.1 };
 const observer = new IntersectionObserver((entries) => {
-
     entries.forEach(entry => {
-
         if (entry.isIntersecting) {
-
             entry.target.style.opacity = "1";
             entry.target.style.transform = "translateY(0)";
-
         }
-
     });
-
 }, observerOptions);
 
-
 document.querySelectorAll('.form-section').forEach(el => {
-
     el.style.opacity = "0";
     el.style.transform = "translateY(20px)";
     el.style.transition = "all 0.6s ease";
-
     observer.observe(el);
-
 });
-
-
 
 // Navbar scroll
 window.addEventListener('scroll', () => {
-
     const navbar = document.querySelector('.navbar');
-
     if (!navbar) return;
-
     if (window.scrollY > 100) {
-
         navbar.style.background = "rgba(255,255,255,0.95)";
         navbar.style.backdropFilter = "blur(10px)";
         navbar.style.boxShadow = "0 2px 20px rgba(0,0,0,0.1)";
-
     } else {
-
         navbar.style.background = "#ffffff";
         navbar.style.backdropFilter = "none";
         navbar.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
-
     }
-
 });
