@@ -1,28 +1,32 @@
-import clientPromise from "../../lib/mongodb";
+import { MongoClient } from "mongodb";
+
+let cachedClient = null;
+let cachedDb = null;
+
+const uri = process.env.MONGO_URI;
+const dbName = "BarberApp";
 
 export default async function handler(req, res) {
-
-  if (req.method === "GET") {
-  return res.status(200).json({
-    mensaje: "API funcionando correctamente"
-  });
-}
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
   try {
+
     const { nombre, email, password, barberId } = req.body;
 
     if (!nombre || !email || !password || !barberId) {
-      return res.status(400).json({ error: "Faltan datos obligatorios" });
+      return res.status(400).json({ error: "Faltan datos" });
     }
 
-    const client = await clientPromise;
-    const db = client.db("BarberApp");
+    if (!cachedClient) {
+      cachedClient = new MongoClient(uri);
+      await cachedClient.connect();
+      cachedDb = cachedClient.db(dbName);
+    }
 
-    const collection = db.collection("barberos");
+    const collection = cachedDb.collection("barberos");
 
     const result = await collection.insertOne({
       nombre,
@@ -30,19 +34,17 @@ export default async function handler(req, res) {
       password,
       barberId,
       estado: "activo",
-      aprobado: true,
       creado: new Date()
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       id: result.insertedId
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error en el servidor"
+    return res.status(500).json({
+      error: error.message
     });
   }
 }
