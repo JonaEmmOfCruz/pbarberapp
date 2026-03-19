@@ -121,7 +121,7 @@ if (barberForm) {
 
         try {
             // IMPORTANTE: Reemplaza con TU URL de Google Apps Script
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbyDj0T2g5lpHP2oD4oecwzhYUhEEtgmU4GLW9-K1kOauzrxLNSvK2plY6O6wancv6Ol/exec';
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxeTUV1RDaQm6k9ys00t_8-mLiac6WkyjRRxA1oDT4SSFQpcNaxVSIz5wpaSlNaB5Tb/exec';
             
             console.log('Enviando datos:', data);
             
