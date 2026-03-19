@@ -231,7 +231,7 @@ if (candidatoForm) {
 
             // ENVIAR
             const response = await fetch(
-                'https://script.google.com/macros/s/AKfycbycGPCQNW2F5Ombt_IpA_vfq8oFlHY81jORaoCSdESXoYOsbnAO0nnAD4SyTSFnkuLC/exec',
+                'https://script.google.com/macros/s/AKfycbxxmNiiMCFyzSbDGKcqG74ewR5GiPOi45-06PLU19JS-WDyblS6nbNZHrKYU9kjTjAi3w/exec',
                 {
                     method: 'POST',
                     body: JSON.stringify(payload)
