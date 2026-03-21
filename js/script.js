@@ -1,107 +1,241 @@
-// Menú móvil
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
+// ============================================
+// ANIMACIONES SUAVES MINIMALISTAS
+// ============================================
 
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ===== 1. SCROLL REVEAL (Funciona hacia arriba y abajo) =====
+    const revealElements = document.querySelectorAll(
+        '.step, .benefit-card, .stat-item, .hero-content, .hero-image, ' +
+        '.registration-container, .download-content, .section-title, ' +
+        '.section-subtitle, .benefits-image'
+    );
+    
+    // Configuración del observer
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // Se activa tanto al entrar como al salir
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            } else {
+                // Opcional: si quieres que se oculte al salir, descomenta la línea de abajo
+                // entry.target.classList.remove('revealed');
+            }
+        });
+    }, {
+        threshold: 0.15,        // Se activa cuando el 15% del elemento es visible
+        rootMargin: '0px 0px -20px 0px'  // Pequeño margen para mejor experiencia
     });
-}
-
-// Cerrar menú al hacer clic en un enlace
-document.querySelectorAll('.nav-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-        if (hamburger) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
+    
+    // Aplicar la clase y observar cada elemento
+    revealElements.forEach(el => {
+        el.classList.add('scroll-reveal');
+        revealObserver.observe(el);
     });
-});
-
-// Smooth scroll para los enlaces con offset para el navbar fijo
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-
-        const target = document.querySelector(targetId);
-        if (target) {
-            const navbarHeight = document.querySelector('.navbar').offsetHeight;
-            const targetPosition = target.offsetTop - navbarHeight;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
+    
+    // ===== 2. ANIMACIÓN SECUENCIAL PARA STEPS =====
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((step, index) => {
+        step.classList.add(`delay-${(index % 5) + 1}`);
     });
-});
-
-// ===== Resaltar link activo durante el scroll =====
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-menu a:not(.btn-registro)');
-const btnRegistro = document.querySelector('.nav-menu a.btn-registro');
-
-function highlightActiveLink() {
-    let current = '';
-    const scrollY = window.scrollY;
-    const navbarHeight = document.querySelector('.navbar').offsetHeight;
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - navbarHeight - 10;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        const sectionId = section.getAttribute('id');
-
-        if (scrollY >= sectionTop && scrollY < sectionBottom) {
-            current = sectionId;
-        }
+    
+    // ===== 3. ANIMACIÓN SECUENCIAL PARA BENEFIT-CARDS =====
+    const benefitCards = document.querySelectorAll('.benefit-card');
+    benefitCards.forEach((card, index) => {
+        card.classList.add(`delay-${(index % 5) + 1}`);
     });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active-link');
+    
+    // ===== 4. CONTADOR DE NÚMEROS EN ESTADÍSTICAS =====
+    const statNumbers = document.querySelectorAll('.stat-item h3');
+    
+    const numberObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                animateNumber(entry.target);
+                entry.target.classList.add('counted');
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    statNumbers.forEach(stat => {
+        numberObserver.observe(stat);
     });
-
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href').replace('#', '');
-        if (href === current) {
-            link.classList.add('active-link');
-        }
+    
+    function animateNumber(element) {
+        const originalText = element.innerText;
+        const hasPlus = originalText.includes('+');
+        const hasPercent = originalText.includes('%');
+        let finalValue = parseFloat(originalText.replace('+', '').replace('%', ''));
+        
+        if (isNaN(finalValue)) return;
+        
+        let current = 0;
+        const duration = 1500;
+        const increment = finalValue / (duration / 16);
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= finalValue) {
+                current = finalValue;
+                clearInterval(timer);
+            }
+            
+            let displayValue = Math.floor(current);
+            let result = displayValue.toString();
+            
+            if (hasPlus) result += '+';
+            if (hasPercent) result += '%';
+            
+            element.innerText = result;
+        }, 16);
+    }
+    
+    // ===== 5. ANIMACIÓN PARA EL MENÚ MÓVIL =====
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            
+            // Animar los links del menú cuando se abre
+            const navLinks = document.querySelectorAll('.nav-menu li');
+            if (navMenu.classList.contains('active')) {
+                navLinks.forEach((link, index) => {
+                    link.style.animation = `slideInLeft 0.3s ease forwards ${index * 0.05}s`;
+                });
+            } else {
+                navLinks.forEach(link => {
+                    link.style.animation = '';
+                });
+            }
+        });
+    }
+    
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (hamburger) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
     });
-
-    if (btnRegistro) {
-        if (current === 'registro-barbero') {
+    
+    // ===== 6. SMOOTH SCROLL CON OFFSET PARA NAVBAR FIJO =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const target = document.querySelector(targetId);
+            if (target) {
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                const targetPosition = target.offsetTop - navbarHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // ===== 7. RESALTAR LINK ACTIVO DURANTE EL SCROLL =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-menu a:not(.btn-registro)');
+    const btnRegistro = document.querySelector('.nav-menu a.btn-registro');
+    
+    function highlightActiveLink() {
+        let current = '';
+        const scrollY = window.scrollY;
+        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - navbarHeight - 10;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollY >= sectionTop && scrollY < sectionBottom) {
+                current = sectionId;
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active-link');
+            const href = link.getAttribute('href').replace('#', '');
+            if (href === current) {
+                link.classList.add('active-link');
+            }
+        });
+        
+        if (btnRegistro && current === 'registro-barbero') {
             btnRegistro.style.background = '#d41e1e';
             btnRegistro.style.transform = 'scale(1.05)';
             btnRegistro.style.boxShadow = '0 0 15px rgba(255, 38, 38, 0.5)';
-        } else {
+        } else if (btnRegistro) {
             btnRegistro.style.background = '';
             btnRegistro.style.transform = '';
             btnRegistro.style.boxShadow = '';
         }
     }
-}
-
-// Efecto de hover para los links
-navLinks.forEach(link => {
-    link.addEventListener('mouseenter', function () {
-        if (!this.classList.contains('active-link')) {
-            this.style.color = 'var(--primary-color)';
-        }
+    
+    window.addEventListener('scroll', highlightActiveLink);
+    window.addEventListener('load', highlightActiveLink);
+    
+    // ===== 8. EFECTO DE PARALLAX SUAVE EN HERO (opcional) =====
+    const heroImage = document.querySelector('.hero-image img');
+    if (heroImage) {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            if (scrolled < window.innerHeight) {
+                heroImage.style.transform = `translateY(${scrolled * 0.03}px)`;
+            }
+        });
+    }
+    
+    // ===== 9. ANIMACIÓN PARA ÍCONOS AL HOVER =====
+    const icons = document.querySelectorAll('.step-icon i, .benefit-card i, .feature-item i');
+    icons.forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            this.style.transition = 'transform 0.2s ease';
+        });
+        icon.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
     });
-
-    link.addEventListener('mouseleave', function () {
-        if (!this.classList.contains('active-link')) {
-            this.style.color = '';
-        }
+    
+    // ===== 10. ANIMACIÓN PARA EL FORMULARIO =====
+    const formInputs = document.querySelectorAll('.form-group input, .form-group select');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.transform = 'translateX(4px)';
+        });
+        input.addEventListener('blur', function() {
+            this.style.transform = 'translateX(0)';
+        });
     });
+    
+    // ===== 11. INICIALIZAR ANIMACIONES VISIBLES AL CARGAR =====
+    setTimeout(() => {
+        const heroContent = document.querySelector('.hero-content');
+        const heroImg = document.querySelector('.hero-image');
+        
+        if (heroContent && !heroContent.classList.contains('revealed')) {
+            heroContent.classList.add('revealed');
+        }
+        if (heroImg && !heroImg.classList.contains('revealed')) {
+            heroImg.classList.add('revealed');
+        }
+    }, 100);
 });
 
-// ===== FORMULARIO CON GOOGLE APPS SCRIPT =====
+// ===== 12. FORMULARIO CON GOOGLE APPS SCRIPT =====
 const barberForm = document.getElementById('barberForm');
 if (barberForm) {
-    barberForm.addEventListener('submit', async function (e) {
+    barberForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const submitBtn = this.querySelector('.btn-submit');
@@ -109,35 +243,26 @@ if (barberForm) {
         submitBtn.textContent = 'Enviando...';
         submitBtn.disabled = true;
 
-        // Crear objeto con los datos
         const formData = new FormData(this);
         const data = {};
         formData.forEach((value, key) => {
             data[key] = value;
         });
-
-        // Agregar campo de términos
         data.terminos = 'aceptado';
 
         try {
-            // IMPORTANTE: Reemplaza con TU URL de Google Apps Script
             const scriptUrl = 'https://script.google.com/macros/s/AKfycbxeTUV1RDaQm6k9ys00t_8-mLiac6WkyjRRxA1oDT4SSFQpcNaxVSIz5wpaSlNaB5Tb/exec';
             
-            console.log('Enviando datos:', data);
-            
-            const response = await fetch(scriptUrl, {
+            await fetch(scriptUrl, {
                 method: 'POST',
-                mode: 'no-cors', // Importante para Apps Script
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams(data).toString()
             });
 
-            // Con 'no-cors' no podemos leer la respuesta, asumimos éxito
             showMessage('¡Registro exitoso! Revisa tu correo para continuar con el proceso.', 'success');
-            
-            // Limpiar formulario
             this.reset();
 
         } catch (error) {
@@ -150,91 +275,14 @@ if (barberForm) {
     });
 }
 
-// Función para mostrar mensajes
 function showMessage(message, type) {
     const messageDiv = document.getElementById('formMessage');
     if (messageDiv) {
         messageDiv.textContent = message;
         messageDiv.className = `form-message ${type}`;
-
-        // Ocultar mensaje después de 5 segundos
         setTimeout(() => {
             messageDiv.textContent = '';
             messageDiv.className = 'form-message';
         }, 5000);
     }
 }
-
-// Validación en tiempo real del teléfono
-const telefonoInput = document.getElementById('telefono');
-if (telefonoInput) {
-    telefonoInput.addEventListener('input', function (e) {
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-}
-
-// Animación al hacer scroll con Intersection Observer
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            entry.target.classList.add('animated');
-        }
-    });
-}, observerOptions);
-
-// Aplicar animación a elementos
-document.querySelectorAll('.step, .benefit-card, .registration-container, .hero-content, .hero-image').forEach(el => {
-    if (el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease-out';
-        observer.observe(el);
-    }
-});
-
-// Navbar background change on scroll
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        if (window.scrollY > 100) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.backdropFilter = 'blur(10px)';
-            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-        } else {
-            navbar.style.background = '#ffffff';
-            navbar.style.backdropFilter = 'none';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        }
-    }
-});
-
-// Inicializar funciones cuando carga la página
-window.addEventListener('load', () => {
-    highlightActiveLink();
-
-    // Fade-in para el hero
-    const heroContent = document.querySelector('.hero-content');
-    const heroImage = document.querySelector('.hero-image');
-
-    if (heroContent) {
-        heroContent.style.opacity = '1';
-        heroContent.style.transform = 'translateY(0)';
-    }
-
-    if (heroImage) {
-        heroImage.style.opacity = '1';
-        heroImage.style.transform = 'translateY(0)';
-    }
-});
-
-// Actualizar highlight en cada scroll
-window.addEventListener('scroll', () => {
-    highlightActiveLink();
-});
