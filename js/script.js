@@ -286,3 +286,4 @@ function showMessage(message, type) {
         }, 5000);
     }
 }
+

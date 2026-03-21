@@ -9,6 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="./assets/favicon-96x96.png">
+    <style>
+        /* Redondear el favicon (funciona en algunos navegadores) */
+        link[rel="icon"] {
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,32 +43,37 @@
     <!-- Hero Section -->
     <section id="inicio" class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1>Lleva tu talento al siguiente nivel y <br> <span style="color: #FF2626;">multiplica tus
-                        ingresos</span></h1>
-                <p>Únete a BarberApp. La plataforma líder que te conecta con clientes, gestiona tus viajes y te ayuda a
-                    multiplicar tus ingresos.</p>
-                <div class="hero-buttons">
-                    <a href="#registro-barbero" class="btn-secondary">Quiero ser Barbero Partner</a>
+            <div class="hero-wrapper">
+                <div class="hero-content">
+                    <h1>Lleva tu talento al siguiente nivel y <br> <span style="color: #FF2626;">multiplica tus
+                            ingresos</span></h1>
+                    <p>Únete a BarberApp. La plataforma líder que te conecta con clientes, gestiona tus viajes y te
+                        ayuda a
+                        multiplicar tus ingresos.</p>
+                    <div class="hero-buttons">
+                        <a href="#registro-barbero" class="btn-secondary">Quiero ser Barbero Partner</a>
+                    </div>
                 </div>
-                <div class="stats" aria-label="Estadísticas de nuestra plataforma">
-                    <div class="stat-item">
-                        <h3>+20%</h3>
-                        <p>Incremento en Ingresos</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>100%</h3>
-                        <p>Control de tu tiempo</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>4.9</h3>
-                        <p>Calificación Promedio</p>
-                    </div>
+                <div class="hero-image">
+                    <img src="./assets/barber_1.png"
+                        alt="Barbero profesional realizando un corte de cabello moderno a domicilio">
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="./assets/barberapp-img1.png"
-                    alt="Barbero profesional realizando un corte de cabello moderno a domicilio">
+
+            <!-- Estadísticas fuera del grid, debajo -->
+            <div class="stats" aria-label="Estadísticas de nuestra plataforma">
+                <div class="stat-item">
+                    <h3>20%</h3>
+                    <p>Incremento en Ingresos</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Control de tu tiempo</p>
+                </div>
+                <div class="stat-item">
+                    <h3>4.9</h3>
+                    <p>Calificación Promedio</p>
+                </div>
             </div>
         </div>
     </section>
@@ -121,7 +133,7 @@
             <h2 class="section-title">¿Por qué ser un <span style="color: #FF2626;">Barbero Partner?</span></h2>
             <div class="benefits-wrapper">
                 <div class="benefits-image">
-                    <img src="./assets/barber-partner.png" alt="Barbero profesional trabajando con BarberApp">
+                    <img src="./assets/barber_2.png" alt="Barbero profesional trabajando con BarberApp">
                 </div>
                 <div class="benefits-list">
                     <div class="benefit-card">
@@ -218,7 +230,7 @@
                 <span class="badge-status" role="status">
                     Lanzamiento oficial: Próximamente
                 </span>
-                <h2>Tu barbería, <span>tus reglas.</span></h2>
+                <h2>Tu barbería, tus reglas.</h2>
                 <p>Sé el primero en descargar la herramienta que transformará tu forma de trabajar. Próximamente
                     disponible para dispositivos iOS y Android.</p>
 
@@ -298,12 +310,13 @@
                         <li><a href="#como-funciona">Cómo funciona</a></li>
                         <li><a href="#beneficios">Beneficios</a></li>
                         <li><a href="#registro-barbero">Ser Barbero</a></li>
+                        <li><a href="./usuarios.html">Para Usuarios</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contacto</h4>
                     <ul>
-                        <li>+52 33 1494 4995</li>
+                        <li>+52 00 0000 0000</li>
                         <li>barberapp.contact@gmail.com</li>
                     </ul>
                 </div>
