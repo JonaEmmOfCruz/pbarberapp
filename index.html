@@ -186,36 +186,54 @@
                     <h3>Inicia tu proceso aquí</h3>
                     <form id="barberForm">
                         <div class="form-group">
-                            <input type="text" name="nombre" placeholder="Nombre completo" required>
+                            <input type="text" name="nombre" placeholder="Nombre completo" require>
                         </div>
+
                         <div class="form-group">
-                            <input type="email" name="email" placeholder="Correo electrónico" required>
+                            <input type="email" name="email" placeholder="Correo electrónico" require>
                         </div>
+
                         <div class="form-group">
-                            <input type="tel" name="telefono" placeholder="Teléfono" required>
+                            <input type="tel" name="telefono" placeholder="Télefono" require>
                         </div>
+
                         <div class="form-group">
-                            <input type="text" name="ciudad" placeholder="Ciudad" required>
+                            <input type="text" name="ciudad" placeholder="Ciudad de residencia" require>
                         </div>
+
                         <div class="form-group">
-                            <input type="number" name="experiencia" placeholder="Años de experiencia" min="0" required>
+                            <input type="number" name="experiencia" placeholder="Años de experiencia" min="0" require>
                         </div>
+
                         <div class="form-group">
-                            <select name="especialidad" required>
+                            <select name="especialidad" required id="">
                                 <option value="">Selecciona tu área principal</option>
                                 <option value="corte">Corte de cabello</option>
                                 <option value="barba">Diseño y Arreglo de Barba</option>
                                 <option value="ambos">Servicio Integral</option>
-                                <option value="otros">Tratamientos y Otros</option>
                             </select>
                         </div>
+
+                        <h3>Crea tu cuenta</h3>
+
                         <div class="form-group">
-                            <label class="checkbox-label">
+                            <input type="text" name="usuario" placeholder="Nombre de usuario" required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="Contraseña" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="" class="checkbox-label">
                                 <input type="checkbox" name="terminos" required>
                                 Acepto los términos y condiciones
                             </label>
                         </div>
-                        <button type="submit" class="btn-submit">Enviar solicitud de ingreso</button>
+
+                        <button type="submit" class="btn-submit">Enviar Registro</button>
+                        <div id="formMessage" class="form-message"></div>
+
                     </form>
                     <div id="formMessage" class="form-message"></div>
                 </div>

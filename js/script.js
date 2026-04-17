@@ -2,6 +2,8 @@
 // ANIMACIONES SUAVES MINIMALISTAS
 // ============================================
 
+console.log("Script de index");
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // ===== 1. SCROLL REVEAL (Funciona hacia arriba y abajo) =====
@@ -14,20 +16,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configuración del observer
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            // Se activa tanto al entrar como al salir
             if (entry.isIntersecting) {
                 entry.target.classList.add('revealed');
-            } else {
-                // Opcional: si quieres que se oculte al salir, descomenta la línea de abajo
-                // entry.target.classList.remove('revealed');
             }
         });
     }, {
-        threshold: 0.15,        // Se activa cuando el 15% del elemento es visible
-        rootMargin: '0px 0px -20px 0px'  // Pequeño margen para mejor experiencia
+        threshold: 0.15,
+        rootMargin: '0px 0px -20px 0px'
     });
     
-    // Aplicar la clase y observar cada elemento
     revealElements.forEach(el => {
         el.classList.add('scroll-reveal');
         revealObserver.observe(el);
@@ -99,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
             
-            // Animar los links del menú cuando se abre
             const navLinks = document.querySelectorAll('.nav-menu li');
             if (navMenu.classList.contains('active')) {
                 navLinks.forEach((link, index) => {
@@ -113,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Cerrar menú al hacer clic en un enlace
     document.querySelectorAll('.nav-menu a').forEach(link => {
         link.addEventListener('click', () => {
             if (hamburger) {
@@ -185,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', highlightActiveLink);
     window.addEventListener('load', highlightActiveLink);
     
-    // ===== 8. EFECTO DE PARALLAX SUAVE EN HERO (opcional) =====
+    // ===== 8. EFECTO DE PARALLAX SUAVE EN HERO =====
     const heroImage = document.querySelector('.hero-image img');
     if (heroImage) {
         window.addEventListener('scroll', () => {
@@ -232,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
-// ===== 12. FORMULARIO CON GOOGLE APPS SCRIPT =====
+// ===== 12. FORMULARIO CONECTADO A MONGODB (VERCEL API) =====
 const barberForm = document.getElementById('barberForm');
 if (barberForm) {
     barberForm.addEventListener('submit', async function(e) {
@@ -243,31 +238,35 @@ if (barberForm) {
         submitBtn.textContent = 'Enviando...';
         submitBtn.disabled = true;
 
+        // Convertir los datos del formulario a un Objeto JSON
         const formData = new FormData(this);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-        data.terminos = 'aceptado';
+        const data = Object.fromEntries(formData.entries());
 
         try {
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxeTUV1RDaQm6k9ys00t_8-mLiac6WkyjRRxA1oDT4SSFQpcNaxVSIz5wpaSlNaB5Tb/exec';
+            // Apuntamos a la API que subiremos a Vercel
+            const apiUrl = 'https://barberapp-api-eight.vercel.app/api/registrar';
             
-            await fetch(scriptUrl, {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json', // Importante para que el backend lo lea como JSON
                 },
-                body: new URLSearchParams(data).toString()
+                body: JSON.stringify(data)
             });
 
-            showMessage('¡Registro exitoso! Revisa tu correo para continuar con el proceso.', 'success');
-            this.reset();
+            const result = await response.json();
+
+            if (response.ok) {
+                showMessage('¡Registro exitoso! Ya estás en nuestra base de datos.', 'success');
+                this.reset();
+            } else {
+                // Muestra el error exacto que envía la API (ej: "El correo ya existe")
+                showMessage('Error: ' + (result.error || 'No se pudo registrar'), 'error');
+            }
 
         } catch (error) {
             console.error('Error:', error);
-            showMessage('Error al enviar el formulario. Por favor, intenta de nuevo.', 'error');
+            showMessage('Error de conexión con el servidor. Por favor, intenta de nuevo.', 'error');
         } finally {
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
@@ -286,4 +285,3 @@ function showMessage(message, type) {
         }, 5000);
     }
 }
-
