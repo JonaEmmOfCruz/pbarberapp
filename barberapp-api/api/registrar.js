@@ -8,25 +8,27 @@ const uri = process.env.MONGO_URI;
 const dbName = "BarberApp";
 
 export default async function handler(req, res) {
-  // --- CONFIGURACIÓN DE CORS OBLIGATORIA ---
+  // --- CONFIGURACIÓN DE CORS ---
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  // ¡Esta línea nueva es clave para que no te dé error de CORS en localhost!
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
   
-  // Responder rápido al preflight del navegador
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // --- LÓGICA DE TU API ---
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Método no permitido. Usa POST." });
+    return res.status(405).json({ error: "Método no permitido." });
   }
 
   try {
-    const { nombre, email, telefono, ciudad, experiencia, especialidad, usuario, password, terminos } = req.body;
+    // 1. AGREGAMOS LOS NUEVOS CAMPOS AQUÍ: servicios, dias, hora_apertura, hora_cierre
+    const { 
+      nombre, email, telefono, ciudad, 
+      usuario, password, terminos,
+      servicios, dias, hora_apertura, hora_cierre 
+    } = req.body;
 
     if (!usuario || !password || !email) {
       return res.status(400).json({ error: "Usuario, Email y Contraseña son obligatorios" });
@@ -48,16 +50,23 @@ export default async function handler(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // 2. GUARDAR EL OBJETO COMPLETO EN MONGODB
     const result = await collection.insertOne({
       nombre,
       email,
       telefono,
       ciudad,
-      experiencia: Number(experiencia),
-      especialidad,
       usuario,
       password: hashedPassword,
-      terminos: terminos === 'on' || terminos === 'aceptado',
+      // Guardamos los nuevos datos
+      servicios: servicios || [], // Será un array de strings
+      dias: dias || [],           // Será un array de strings
+      horario: {
+        apertura: hora_apertura,
+        cierre: hora_cierre
+      },
+      // Verificación de términos mejorada
+      terminos: terminos === 'on' || terminos === true || terminos === 'true',
       estado: "pendiente",
       fechaRegistro: new Date()
     });

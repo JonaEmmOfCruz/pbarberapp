@@ -186,46 +186,89 @@
                     <h3>Inicia tu proceso aquí</h3>
                     <form id="barberForm">
                         <div class="form-group">
-                            <input type="text" name="nombre" placeholder="Nombre completo" require>
+                            <input type="text" name="nombre" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Correo electrónico" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="telefono" placeholder="Teléfono" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="ciudad" placeholder="Ciudad de residencia" required>
                         </div>
 
                         <div class="form-group">
-                            <input type="email" name="email" placeholder="Correo electrónico" require>
+                            <p class="label-title">Servicios que ofreces:</p>
+                            <div class="services-tags">
+                                <input type="checkbox" name="servicios" value="corte" id="corte">
+                                <label for="corte">Corte</label>
+
+                                <input type="checkbox" name="servicios" value="barba" id="barba">
+                                <label for="barba">Barba</label>
+
+                                <input type="checkbox" name="servicios" value="ceja" id="ceja">
+                                <label for="ceja">Ceja</label>
+
+                                <input type="checkbox" name="servicios" value="greka" id="greka">
+                                <label for="greka">Greka</label>
+
+                                <input type="checkbox" name="servicios" value="tinte" id="tinte">
+                                <label for="tinte">Tinte</label>
+
+                                <input type="checkbox" name="servicios" value="vapor" id="vapor">
+                                <label for="vapor">Vapor</label>
+
+                                <input type="checkbox" name="servicios" value="mascarilla" id="mascarilla">
+                                <label for="mascarilla">Mascarilla</label>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <input type="tel" name="telefono" placeholder="Télefono" require>
+                            <p class="label-title">Días disponibles:</p>
+                            <div class="days-tags">
+                                <input type="checkbox" name="dias" value="Lunes" id="lunes">
+                                <label for="lunes">Lun</label>
+
+                                <input type="checkbox" name="dias" value="Martes" id="martes">
+                                <label for="martes">Mar</label>
+
+                                <input type="checkbox" name="dias" value="Miércoles" id="miercoles">
+                                <label for="miercoles">Mié</label>
+
+                                <input type="checkbox" name="dias" value="Jueves" id="jueves">
+                                <label for="jueves">Jue</label>
+
+                                <input type="checkbox" name="dias" value="Viernes" id="viernes">
+                                <label for="viernes">Vie</label>
+
+                                <input type="checkbox" name="dias" value="Sábado" id="sabado">
+                                <label for="sabado">Sáb</label>
+
+                                <input type="checkbox" name="dias" value="Domingo" id="domingo">
+                                <label for="domingo">Dom</label>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <input type="text" name="ciudad" placeholder="Ciudad de residencia" require>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="number" name="experiencia" placeholder="Años de experiencia" min="0" require>
-                        </div>
-
-                        <div class="form-group">
-                            <select name="especialidad" required id="">
-                                <option value="">Selecciona tu área principal</option>
-                                <option value="corte">Corte de cabello</option>
-                                <option value="barba">Diseño y Arreglo de Barba</option>
-                                <option value="ambos">Servicio Integral</option>
-                            </select>
+                            <p class="label-title">Horario general (8:00 AM a 11:00 PM):</p>
+                            <div class="time-range">
+                                <select name="hora_apertura" id="hora_apertura" required></select>
+                                <span>a</span>
+                                <select name="hora_cierre" id="hora_cierre" required></select>
+                            </div>
                         </div>
 
                         <h3>Crea tu cuenta</h3>
-
                         <div class="form-group">
                             <input type="text" name="usuario" placeholder="Nombre de usuario" required>
                         </div>
-
                         <div class="form-group">
                             <input type="password" name="password" placeholder="Contraseña" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="" class="checkbox-label">
+                            <label class="checkbox-label">
                                 <input type="checkbox" name="terminos" required>
                                 Acepto los términos y condiciones
                             </label>
@@ -233,9 +276,7 @@
 
                         <button type="submit" class="btn-submit">Enviar Registro</button>
                         <div id="formMessage" class="form-message"></div>
-
                     </form>
-                    <div id="formMessage" class="form-message"></div>
                 </div>
             </div>
         </div>

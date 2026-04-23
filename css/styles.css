@@ -1008,6 +1008,94 @@ section {
 .delay-4 { transition-delay: 0.2s; }
 .delay-5 { transition-delay: 0.25s; }
 
+.label-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.services-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+/* Escondemos el checkbox real */
+.services-tags input[type="checkbox"] {
+    display: none;
+}
+
+/* Estilo del "Botón/Tag" */
+.services-tags label {
+    padding: 8px 16px;
+    border: 2px solid #e1e1e1;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+/* Estilo cuando está seleccionado */
+.services-tags input[type="checkbox"]:checked + label {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.time-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.days-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.days-tags input[type="checkbox"] {
+    display: none;
+}
+
+.days-tags label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border: 2px solid #e1e1e1;
+    border-radius: 50%; /* Los hace circulares */
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.days-tags input[type="checkbox"]:checked + label {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.time-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-range select {
+    flex: 1; /* Hace que ambos midan lo mismo */
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
