@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     const { 
       nombre, email, telefono, ciudad, 
       usuario, password, terminos,
-      servicios, dias, hora_apertura, hora_cierre 
+      servicios
     } = req.body;
 
     if (!usuario || !password || !email) {
@@ -60,14 +60,8 @@ export default async function handler(req, res) {
       password: hashedPassword,
       // Guardamos los nuevos datos
       servicios: servicios || [], // Será un array de strings
-      dias: dias || [],           // Será un array de strings
-      horario: {
-        apertura: hora_apertura,
-        cierre: hora_cierre
-      },
       // Verificación de términos mejorada
       terminos: terminos === 'on' || terminos === true || terminos === 'true',
-      estado: "pendiente",
       fechaRegistro: new Date()
     });
 

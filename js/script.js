@@ -278,16 +278,19 @@ if (barberForm) {
                 body: JSON.stringify(data)
             });
 
-            const result = await response.json();
+            let result;
 
-            if (response.ok) {
+            try {
+                result = await response.json();
+            } catch (e) {
+                result = null;
+            }
+
+            if (response.ok && result?.success) {
                 showMessage('¡Registro exitoso! Ya estás en nuestra base de datos.', 'success');
                 this.reset();
-                // Opcional: Recargar horarios por defecto tras reset
-                document.getElementById('hora_apertura').value = "8:00";
-                document.getElementById('hora_cierre').value = "20:00";
             } else {
-                showMessage('Error: ' + (result.error || 'No se pudo registrar'), 'error');
+                showMessage('Error: ' + (result?.error || 'Respuesta inválida del servidor'), 'error');
             }
 
         } catch (error) {
