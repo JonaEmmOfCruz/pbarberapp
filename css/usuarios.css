@@ -8,8 +8,8 @@
 }
 
 :root {
-    --primary-color: #FF2626;
-    --primary-dark: #d41e1e;
+    --primary-color: #2680ff;
+    --primary-dark: #1e6dd4;
     --secondary-color: #1e1e1e;
     --text-color: #2c2c2e;
     --text-secondary: #5e5e62;
@@ -17,7 +17,7 @@
     --white: #ffffff;
     --gray-apple: #f5f5f7;
     --text-dark: #1d1d1f;
-    --focus-ring: 0 0 0 3px rgba(255, 38, 38, 0.4);
+    --focus-ring: 0 0 0 3px rgba(38, 125, 255, 0.4);
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
@@ -457,7 +457,7 @@ section {
     width: 80px;
     height: 80px;
     margin: 0 auto 20px;
-    background: rgba(255, 38, 38, 0.1);
+    background: rgba(38, 103, 255, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -516,13 +516,13 @@ section {
 .step {
     text-align: center;
     padding: 32px 20px;
-    background: rgba(255, 38, 38, 0.05);
+    background: rgba(38, 103, 255, 0.05);
     border-radius: 24px;
     transition: all 0.3s ease;
 }
 
 .step:hover {
-    background: rgba(255, 38, 38, 0.1);
+    background: rgba(38, 92, 255, 0.1);
     transform: translateY(-4px);
 }
 
@@ -533,7 +533,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 38, 38, 0.15);
+    background: rgba(38, 128, 255, 0.15);
     border-radius: 50%;
     transition: all 0.3s ease;
 }
@@ -780,7 +780,7 @@ section {
    ============================================ */
 .download-app {
     padding: 80px 0;
-    background: linear-gradient(135deg, #FF2626 0%, #d41e1e 50%, #b01818 100%);
+    background: linear-gradient(135deg, #2680ff 0%, #1e6dd4 50%, #1e6dd4 100%);
     color: var(--white);
     position: relative;
     overflow: hidden;
